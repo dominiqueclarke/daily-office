@@ -1,7 +1,7 @@
 angular.module('dailyOffice')
 .service('calendarService', function($http, $sce) {
   this.getDailyCalendar = () => {
-    return $http.get('https://calapi.inadiutorium.cz/api/v0/en/calendars/general-en/today')
+    return $http.get('http://calapi.inadiutorium.cz/api/v0/en/calendars/general-en/today')
     .then(calendar => {
       //console.log(scripture.data);
       //console.log($sce.trustAsHtml(scripture.data));
