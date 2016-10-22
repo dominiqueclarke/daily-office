@@ -1,7 +1,7 @@
 angular.module('dailyOffice')
 .service('scriptureService', function($http, $sce) {
   this.getDailyScripture = () => {
-    return $http.get('https://www.esvapi.org/v2/rest/readingPlanQuery?key=IP&reading-plan=bcp')
+    return $http.get('http://www.esvapi.org/v2/rest/readingPlanQuery?key=IP&reading-plan=bcp')
     .then(scripture => {
       console.log(scripture.data);
       //console.log($sce.trustAsHtml(scripture.data));
@@ -12,7 +12,7 @@ angular.module('dailyOffice')
     const yesterday = new Date().getTime() - 86400000;
     const yesterdayString = isoToString(yesterday);
     console.log(yesterdayString);
-    return $http.get('https://www.esvapi.org/v2/rest/readingPlanQuery?key=IP&reading-plan=bcp&date=' + yesterdayString)
+    return $http.get('http://www.esvapi.org/v2/rest/readingPlanQuery?key=IP&reading-plan=bcp&date=' + yesterdayString)
     .then(scripture => {
       console.log('yesterday scripture', scripture.data)
       //console.log($sce.trustAsHtml(scripture.data));
