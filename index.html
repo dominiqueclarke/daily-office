@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="dailyOffice" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="styles.css"></link>
+  <title>Document</title>
+</head>
+<body ng-controller="testCtrl">
+
+  <div class="container">
+    <div ng-bind-html="html"></div>
+    <span class="season">{{season}}</span>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
+  <script src="./src/app.js"></script>
+  <script src="./src/services/scriptureService.js"></script>
+  <script src="./src/services/calendarService.js"></script>
+  <script src="./src/controllers/testcontroller.js"></script>
+</body>
+</html>

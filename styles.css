@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Crimson+Text');
+
+body {
+  background-color:#EFF0F0;
+  font-family:"Crimson Text";
+}
+a {
+  color:#F73650;
+}
+.container {
+  width:90%;
+  margin:0 auto;
+  position:relative;
+}
+
+.esv {
+  width:80%;
+}
+
+.season {
+  position:absolute;
+  top:0;
+  right:0;
+}
