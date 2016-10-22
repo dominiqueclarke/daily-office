@@ -1,20 +1,39 @@
 @import url('https://fonts.googleapis.com/css?family=Crimson+Text');
 
+* {
+  box-sizing:border-box;
+}
 body {
   background-color:#EFF0F0;
   font-family:"Crimson Text";
 }
 
+.date {
+  text-transform:capitalize;
+}
+
 .ephipany {
-  background-color:white;
+
+
+background: #abbaab; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #abbaab , #ffffff); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #abbaab , #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 .lent {
-  background-color:violet;
+background: #B993D6; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #B993D6 , #8CA6DB); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #B993D6 , #8CA6DB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 .easter {
-  background-color:whitesmoke;
+
+background: #abbaab; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #abbaab , #ffffff); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #abbaab , #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 .pentecost {
@@ -22,11 +41,19 @@ body {
 }
 
 .ordinary {
-  background-color:green;
+
+
+
+  background: #DAD299; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #DAD299 , #B0DAB9); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #DAD299 , #B0DAB9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 .advent {
-  background-color:violet;
+background: #B993D6; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #B993D6 , #8CA6DB); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #B993D6 , #8CA6DB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .christmas {
@@ -40,10 +67,30 @@ a {
   width:90%;
   margin:0 auto;
   position:relative;
+  overflow:auto;
 }
 
 .esv {
   width:80%;
+}
+
+.esv h2 {
+  font-size:1.5rem;
+}
+
+.esv-text {
+  font-size:1.2rem;
+}
+
+.footnote {
+  font-size: .7rem;
+    /* line-height: .7rem; */
+    position: relative;
+    top: -8px;
+}
+
+.footnotes .footnote {
+  position:static;
 }
 
 .season {

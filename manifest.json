@@ -1,0 +1,16 @@
+{
+   "background": {
+      "persistent": false,
+      "scripts": [ "background.js" ]
+   },
+   "browser_action": {
+     "default_icon": "icon.png"
+   },
+   "description": "The most beautiful daily bible verse plugin.  Select a reading plans, read the verse whenever you open a new tab.",
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwzNjVDIMLE7SURpLA9z7EhsG+RP3ny1Dp0qvHcZFZJnpaBVLI485CuQNrh2fPhbnq6itf599e3T+Tz+Np+56Kx0DmrcrRhSgII68aA5DsrqCiNyGpe8rKXT58piPtL7u7Rm054Z+MVmMmYcLdH9nW2RP6b+rDdhpxz4Mk7g2Ac03UHn7TINMEmA+TZMI22IkCQ1q7oqdwsP/gG3NGr/OmQ00qKYyN7ft8w1NNP3yAe3I9EEB8NyFATQ/mGcpBxJH23nklgHPC9tALlzem3Gzm1zrUXP+kXOQtuu7VgvY44YCGcV86TIEXcrqivVQoHcQQoojgoZH19Uw288nORgypQIDAQAB",
+   "manifest_version": 2,
+   "name": "Daily Office Liturgy Calendar",
+   "permissions": ["tabs", "https://ajax.googleapis.com/", "http://www.esvapi.org/", "http://calapi.inadiutorium.cz/"],
+   "version": "1.0",
+   "web_accessible_resources": [ "reading_plan.js", "jqmeter.min.js", "circle-progress.js" ]
+}
