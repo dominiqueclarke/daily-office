@@ -4,6 +4,35 @@ body {
   background-color:#EFF0F0;
   font-family:"Crimson Text";
 }
+
+.ephipany {
+  background-color:white;
+}
+
+.lent {
+  background-color:violet;
+}
+
+.easter {
+  background-color:whitesmoke;
+}
+
+.pentecost {
+  background-color:red;
+}
+
+.ordinary {
+  background-color:green;
+}
+
+.advent {
+  background-color:violet;
+}
+
+.christmas {
+  background-color:whitesmoke;
+}
+
 a {
   color:#F73650;
 }

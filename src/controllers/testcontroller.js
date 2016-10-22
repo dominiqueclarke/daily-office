@@ -8,4 +8,6 @@ angular.module('dailyOffice')
   calendarService.getDailyCalendar().then(calendar => {
     $scope.season = calendar.season;
   })
+  scriptureService.getYesterdaysScripture();
+  $scope.getYesterdaysScripture = scriptureService.getYesterdaysScripture;
 });
