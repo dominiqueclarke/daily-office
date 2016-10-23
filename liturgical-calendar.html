@@ -1,0 +1,594 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Daily Office Chrome</title>
+	<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+	<script type="text/javascript" src="moment.min.js"></script>
+	<script type="text/javascript" src="moment-range.min.js"></script>
+	<script type="text/javascript" src="advent.js"></script>
+	<style type="text/css">
+
+        .todayPointer {
+            fill: white;
+            stroke: black;
+            stroke-width: 3px;
+        }
+		.seasonArc {
+			fill: #999;
+			stroke: #999;
+		}
+
+        .seasonArcAdvent {
+			fill: #9F3CD4;			
+		}
+        .seasonArcChristmas {
+			fill: #ffffff;
+		}
+        .seasonArcEpiphany {
+			fill: #28872A;
+		}
+        .seasonArcLent {
+			fill: #9F3CD4;
+		}
+        .seasonArcHolyWeek {
+			fill: #ff0000;
+		}
+        .seasonArcEaster {
+			fill: #ffffff;
+		}
+        .seasonArcOrdinary {
+			fill: #28872A;
+		}
+
+        .monthArc {
+			fill: #F4F4F4;
+			stroke: #AAAAAA;
+		}
+
+		.monthText {
+			fill: #6B6B6B;
+			font-size: 12px;
+			font-family: 'Arial', 'Helvetica', sans-serif;
+		}
+
+        .seasonTextAlt {
+			fill: #6B6B6B;
+			font-size: 12px;
+			font-family: 'Arial', 'Helvetica', sans-serif;
+		}
+
+        .seasonText {
+			fill: #ffffff;
+			font-size: 12px;
+			font-family: 'Arial', 'Helvetica', sans-serif;
+		}
+
+        .centercircle {
+            fill: white;
+            color: #bbb;
+            stroke: #bbb;
+        }
+
+        .feastLine {
+            stroke: #eee;
+            stroke-width: 5; 
+        }
+        .feastLine:hover {
+            stroke: #aaa;
+            stroke-width: 5;
+        }
+        .feastText {
+			fill: #6B6B6B;
+			font-size: 10px;
+			font-family: 'Arial', 'Helvetica', sans-serif;
+		}
+        div.tooltip {	
+            position: absolute;			
+            text-align: center;			
+            /* width: 100px; */					
+            /* height: 28px; */					
+            padding: 6px 10px 6px 10px;	
+            font: 12px sans-serif;		
+            background: lightsteelblue;	
+            border: 2px solid #869fbe;		
+            border-radius: 4px;			
+            pointer-events: none;			
+        }
+
+
+	</style>
+</head>
+<body>
+
+	<div id="liturgical_cal" style="float: right; margin-right: 50px; margin-top: 50px;">
+
+	</div>
+
+	<script type="text/javascript">
+
+		// ---------------------------------------------------------------
+		// SOURCES
+		// ---------------------------------------------------------------
+		//      BLOG: http://www.visualcinnamon.com/2015/09/placing-text-on-arcs.html, 
+		//      CODE: http://bl.ocks.org/nbremer/bf6d15082ea81ce69b55
+		//
+		// ---------------------------------------------------------------
+
+		
+
+		// ---------------------------------------------------------------
+		// Config
+		// ---------------------------------------------------------------
+
+			var width = 400;
+			var height = 400;
+
+			var margin = { left: 20, top: 20, right: 20, bottom: 20 };
+
+
+		// ---------------------------------------------------------------
+		// Data
+		// ---------------------------------------------------------------
+
+			//The start date number and end date number of the months in a year
+			var monthDataNonLeap = [
+				{ month: "January", startDateID: 0, endDateID: 30 },
+				{ month: "February", startDateID: 31, endDateID: 58 },   
+				{ month: "March", startDateID: 59, endDateID: 89 },
+				{ month: "April", startDateID: 90, endDateID: 119 },
+				{ month: "May", startDateID: 120, endDateID: 150 },
+				{ month: "June", startDateID: 151, endDateID: 180 },
+				{ month: "July", startDateID: 181, endDateID: 211 },
+				{ month: "August", startDateID: 212, endDateID: 242 },
+				{ month: "September", startDateID: 243, endDateID: 272 },
+				{ month: "October", startDateID: 273, endDateID: 303 },
+				{ month: "November", startDateID: 304, endDateID: 334 },
+				{ month: "December", startDateID: 335, endDateID: 364 }
+			];
+
+			var monthDataLeap = [
+                    { month: "January", startDateID: 0, endDateID: 30 },
+                    { month: "February", startDateID: 31, endDateID: 59 },   // leap year
+                    { month: "March", startDateID: 60, endDateID: 90 },
+                    { month: "April", startDateID: 91, endDateID: 120 },
+                    { month: "May", startDateID: 121, endDateID: 151 },
+                    { month: "June", startDateID: 152, endDateID: 181 },
+                    { month: "July", startDateID: 182, endDateID: 212 },
+                    { month: "August", startDateID: 213, endDateID: 243 },
+                    { month: "September", startDateID: 244, endDateID: 273 },
+                    { month: "October", startDateID: 274, endDateID: 304 },
+                    { month: "November", startDateID: 305, endDateID: 334 },
+                    { month: "December", startDateID: 335, endDateID: 366 }
+			];
+
+			var monthData = monthDataNonLeap;
+			if (moment().isLeapYear()) {
+			    monthData = monthDataLeap;
+			}
+			
+			var colorMonths = ["#AAAAAA", "#CCCCCC", "#AAAAAA", "#CCCCCC", "#AAAAAA", "#CCCCCC", "#AAAAAA", "#CCCCCC", "#AAAAAA", "#CCCCCC", "#AAAAAA", "#CCCCCC", ];
+
+		// ---------------------------------------------------------------
+		// Calculate seasons
+		// ---------------------------------------------------------------
+			var today = new Date();
+			var year = today.getFullYear();
+			var adventSeason = advent(year).toDate();
+			var christmasDay = new Date(year, 11, 25);
+			var christmasSeason = moment().range(new Date(year, 11, 26), new Date(year+1, 0, 6));   // we're not consistently paying attention to year+1 
+			//var epiphanySeason = moment().range(epiphany(year).dayAfter(), ashWednesday(year)).toDate();
+			var epiphanySeasonUS = moment().range(new Date(year, 0, 6), ashWednesday(year)).toDate();
+			var lentSeason = lent(year).toDate();
+			var holyweekSeason = moment().range(palmSunday(year), easter(year)).toDate();
+			var easterSeason = easterSeason(year).toDate();
+			var ordinarySeason = secondOrdinaryTime(year).toDate();
+
+			//alert(JulianDate(today, year));
+
+			var seasonData = [
+						{ season: "Advent",        startDateID: DaysFromAdvent(adventSeason[1], year), endDateID: DaysFromAdvent(adventSeason[0], year) },
+						{ season: "",              startDateID: DaysFromAdvent(christmasSeason[1], year), endDateID: DaysFromAdvent(christmasSeason[1], year) + 12 },
+						{ season: "Epiphany",      startDateID: DaysFromAdvent(epiphanySeasonUS[1], year), endDateID: DaysFromAdvent(epiphanySeasonUS[0], year) },
+						{ season: "Lent",          startDateID: DaysFromAdvent(lentSeason[1], year), endDateID: DaysFromAdvent(lentSeason[0], year) },
+						{ season: "",              startDateID: DaysFromAdvent(holyweekSeason[1], year), endDateID: DaysFromAdvent(holyweekSeason[0], year) },
+						{ season: "Easter",        startDateID: DaysFromAdvent(easterSeason[1], year), endDateID: DaysFromAdvent(easterSeason[0], year) },
+						{ season: "Ordinary Time", startDateID: DaysFromAdvent(ordinarySeason[1], year), endDateID: DaysFromAdvent(ordinarySeason[0], year) },
+			];
+
+			var seasonCss = [
+                { body: "seasonArcAdvent",    text: "seasonText" },
+                { body: "seasonArcChristmas", text: "seasonTextAlt" },
+                { body: "seasonArcEpiphany",  text: "seasonText" },
+                { body: "seasonArcLent",      text: "seasonText" },
+                { body: "seasonArcHolyWeek",  text: "seasonText" },
+                { body: "seasonArcEaster",    text: "seasonTextAlt" },
+                { body: "seasonArcOrdinary",  text: "seasonText" },
+			];
+
+			
+
+		// ---------------------------------------------------------------
+		// D3 Functions
+		// ---------------------------------------------------------------
+
+		//Function to make SVG arc paths with inner and outer radius 
+
+		// outer ring (Seasons)
+			var arc = d3.svg.arc()
+				.innerRadius(width * 0.9 / 2 - 10)
+				.outerRadius(width * 0.9 / 2 + 30);
+
+		// inner ring (Months)
+			var arc_in = d3.svg.arc()
+					  .innerRadius(width * 0.9 / 2 - 50)
+					  .outerRadius(width * 0.9 / 2 - 15);
+
+
+		//Function to turn the month data into start and end angles
+
+        // inner ring (months)
+			var janDiff = DaysFromAdvent(new Date(year, 0, 1), year);
+			janRotate = (365 - janDiff) / 360 * 365;
+			var pie_in = d3.layout.pie()
+                    .startAngle(janRotate * Math.PI / 180)
+	                .endAngle(janRotate * Math.PI / 180 + 2 * Math.PI)
+					.value(function (d) { return d.endDateID - d.startDateID; })
+					.padAngle(.01)
+					.sort(null);
+
+
+			// Outer ring (seasons)
+			var pie = d3.layout.pie()
+				.value(function (d) { return d.endDateID - d.startDateID; })
+				.padAngle(.01)
+				.sort(null);
+
+			
+
+		// ---------------------------------------------------------------
+		// Start drawing
+		// ---------------------------------------------------------------
+
+			//Create SVG element
+			var svg = d3.select("#liturgical_cal").append("svg")
+						.attr("width", (width + margin.left + margin.right))
+						.attr("height", (height + margin.top + margin.bottom))
+					    .append("g").attr("class", "wrapper")                        
+						.attr("transform", "translate(" + (width / 2 + margin.left) + "," + (height / 2 + margin.top) + ")");
+
+			// Create div for the tooltip
+			var tip = d3.select("#liturgical_cal").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+			//Draw the arcs 
+			svg.selectAll(".seasonArc")
+				.data(pie(seasonData))
+				.enter().append("path")
+				//.attr("class", "seasonArc")				             
+                .attr("class", function (d, i) {
+                    return "seasonArc " + seasonCss[i].body;
+                })
+				.attr("d", arc)
+				.each(function (d, i) {
+
+					//A regular expression that captures all in between the start of a string (denoted by ^) and a capital letter L
+					//The letter L denotes the start of a line segment
+					//The "all in between" is denoted by the .+?
+					//where the . is a regular expression for "match any single character except the newline character"
+					//the + means "match the preceding expression 1 or more times" (thus any single character 1 or more times)
+					//the ? has to be added to make sure that it stops at the first L it finds, not the last L
+					//It thus makes sure that the idea of ^.*L matches the fewest possible characters
+					//For more information on regular expressions see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+					var firstArcSection = /(^.+?)L/;
+
+					//Grab everything up to the first Line statement
+					//The [1] gives back the expression between the () (thus not the L as well) which is exactly the arc statement
+					var newArc = firstArcSection.exec(d3.select(this).attr("d"))[1];
+					//Replace all the comma's so that IE can handle it -_-
+					//The g after the / is a modifier that "find all matches rather than stopping after the first match"
+					newArc = newArc.replace(/,/g, " ");
+
+					//Create a new invisible arc that the text can flow along
+					svg.append("path")
+					.attr("class", "hiddenMonthArcs")
+					.attr("id", "seasonArc_" + i)
+					.attr("d", newArc)
+					.style("fill", "none");
+				});
+
+			svg.selectAll(".monthArcInner")
+					.data(pie_in(monthData))
+					.enter().append("path")
+					.attr("class", "monthArc")
+					.attr("d", arc_in)
+					.each(function (d, i) {
+					
+						var firstArcSection = /(^.+?)L/;					
+						var newArc = firstArcSection.exec(d3.select(this).attr("d"))[1];
+						newArc = newArc.replace(/,/g, " ");
+					
+						//Create a new invisible arc that the text can flow along
+						svg.append("path")
+						.attr("class", "hiddenMonthArcsInner")
+						.attr("id", "monthArcInner_" + i)
+						.attr("d", newArc)
+						.style("fill", "none");
+					});
+
+			
+			//Append the month names within the arcs
+			svg.selectAll(".monthTextInner")
+				.data(monthData)
+				.enter().append("text")
+				.attr("class", "monthText")
+				//.attr("x", 5) //Move the text from the start angle of the arc
+				.attr("dy", 24) //Move the text down
+				.append("textPath")
+				.attr("startOffset", "50%")
+				.style("text-anchor", "middle")
+				.attr("xlink:href", function (d, i) { return "#monthArcInner_" + i; })                
+				.text(function (d) { return d.month; });
+
+			svg.selectAll(".seasonText")
+				 .data(seasonData)
+				 .enter().append("text")				 
+                .attr("class", function (d, i) {
+                    return seasonCss[i].text;
+                })
+				//.attr("x", 5) //Move the text from the start angle of the arc
+				 .attr("dy", 23) //Move the text down
+				 .append("textPath")
+				 .attr("startOffset", "50%")
+				 .style("text-anchor", "middle")
+				 .attr("xlink:href", function (d, i) { return "#seasonArc_" + i; })
+				 .text(function (d) { return d.season; });
+
+        // draw circle showing today's date
+
+			var todayVal = DateToXY(new Date(), width * 0.9 / 2 + 28, year);
+			var todayCircle = svg.append("circle")
+			            .attr("cx", todayVal.x)   // todayDiffx
+			            .attr("cy", todayVal.y)   // todayDiffy
+			            .attr("r", 8)
+			            .attr('class', 'todayPointer')
+                        .on("mouseover", function (d) {
+                            tip.transition()
+                                .duration(100)
+                                .style("opacity", 1.0);
+                            tip.html(new moment(new Date()).format("MMMM D"))
+                                .style("left", (d3.event.pageX) - 40 + "px")
+                                .style("top", (d3.event.pageY - 50) + "px");
+                        })
+                        .on("mouseout", function (d) {
+                            tip.transition()
+                                .duration(800)
+                                .style("opacity", 0);
+                        });
+
+
+			var allSaintsVal = DateToXY(new Date(year, 10, 1), width * 0.9 / 2 - 50 - 3, year);
+            var allSaintsLine = svg.append("line")
+			            .attr("x1", 0)
+			            .attr("y1", 0)
+			            .attr("x2", allSaintsVal.x)
+                        .attr("y2", allSaintsVal.y)
+			            .attr('class', 'feastLine')                        
+                        .on("mouseover", function (d) {
+                            tip.transition()
+                                .duration(100)
+                                .style("opacity", 1.0);
+                            tip.html('All Saints Day, November 1')
+                                .style("left", (d3.event.pageX) + 20 + "px")
+                                .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                        .on("mouseout", function (d) {
+                            tip.transition()
+                                .duration(800)
+                                .style("opacity", 0);
+                        });
+
+            //var allSaintsText = svg.append("text")
+            //            .style("text-anchor", "beginning")
+            //            .attr("dx", "30px")
+            //            .attr("dy", "0px")
+            //            .attr("transform", function (d) {
+            //                return "rotate(-30)"
+            //            })
+            //           .attr("class", "feastText")
+            //           .text("All Saints Day");
+
+
+            var christmasVal = DateToXY(new Date(year, 11, 25), width * 0.9 / 2 - 50 - 3, year);
+            var christmasLine = svg.append("line")
+			            .attr("x1", 0)
+			            .attr("y1", 0)
+			            .attr("x2", christmasVal.x)
+                        .attr("y2", christmasVal.y)
+			            .attr('class', 'feastLine')
+                        .on("mouseover", function (d) {
+                            tip.transition()
+                                .duration(100)
+                                .style("opacity", 1.0);
+                            tip.html('Christmas Day, December 25')
+                                .style("left", (d3.event.pageX) + 20 + "px")
+                                .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                        .on("mouseout", function (d) {
+                            tip.transition()
+                                .duration(800)
+                                .style("opacity", 0);
+                        });
+
+            var christTheKingVal = DateToXY(new Date(year, 10, 20), width * 0.9 / 2 - 50 - 3, year);
+            var christTheKingLine = svg.append("line")
+			            .attr("x1", 0)
+			            .attr("y1", 0)
+			            .attr("x2", christTheKingVal.x)
+                        .attr("y2", christTheKingVal.y)
+			            .attr('class', 'feastLine')
+                        .on("mouseover", function (d) {
+                            tip.transition()
+                                .duration(100)
+                                .style("opacity", 1.0);
+                            tip.html('Christ the King, November 20')
+                                .style("left", (d3.event.pageX) + 20 + "px")
+                                .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                        .on("mouseout", function (d) {
+                            tip.transition()
+                                .duration(800)
+                                .style("opacity", 0);
+                        });
+
+            var epiphanyVal = DateToXY(new Date(year+1, 0, 6), width * 0.9 / 2 - 50 - 3, year);
+            var epiphanyLine = svg.append("line")
+			            .attr("x1", 0)
+			            .attr("y1", 0)
+			            .attr("x2", epiphanyVal.x)
+                        .attr("y2", epiphanyVal.y)
+			            .attr('class', 'feastLine')
+                        .on("mouseover", function (d) {
+                            tip.transition()
+                                .duration(100)
+                                .style("opacity", 1.0);
+                            tip.html('Epiphany, January 6')
+                                .style("left", (d3.event.pageX) + 20 + "px")
+                                .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                        .on("mouseout", function (d) {
+                            tip.transition()
+                                .duration(800)
+                                .style("opacity", 0);
+                        });
+
+
+            var ashWedVal = DateToXY(ashWednesday(year).toDate(), width * 0.9 / 2 - 50 - 3, year);
+            var ashWedLine = svg.append("line")
+			            .attr("x1", 0)
+			            .attr("y1", 0)
+			            .attr("x2", ashWedVal.x)
+                        .attr("y2", ashWedVal.y)
+			            .attr('class', 'feastLine')
+                        .on("mouseover", function (d) {
+                            tip.transition()
+                                .duration(100)
+                                .style("opacity", 1.0);
+                            tip.html('Ash Wednesday, ' + ashWednesday(year).format("MMMM D"))
+                                .style("left", (d3.event.pageX) + 20 + "px")
+                                .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                        .on("mouseout", function (d) {
+                            tip.transition()
+                                .duration(800)
+                                .style("opacity", 0);
+                        });
+
+            var palmSundayVal = DateToXY(palmSunday(year).toDate(), width * 0.9 / 2 - 50 - 3, year);
+            var palmSundayLine = svg.append("line")
+			            .attr("x1", 0)
+			            .attr("y1", 0)
+			            .attr("x2", palmSundayVal.x)
+                        .attr("y2", palmSundayVal.y)
+			            .attr('class', 'feastLine')
+                        .on("mouseover", function (d) {
+                            tip.transition()
+                                .duration(100)
+                                .style("opacity", 1.0);
+                            tip.html('Palm Sunday, ' + palmSunday(year).format("MMMM D"))
+                                .style("left", (d3.event.pageX) + 20 + "px")
+                                .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                        .on("mouseout", function (d) {
+                            tip.transition()
+                                .duration(800)
+                                .style("opacity", 0);
+                        });
+
+            var pentecostVal = DateToXY(pentecost(year).toDate(), width * 0.9 / 2 - 50 - 3, year);
+            var pentecostLine = svg.append("line")
+			            .attr("x1", 0)
+			            .attr("y1", 0)
+			            .attr("x2", pentecostVal.x)
+                        .attr("y2", pentecostVal.y)
+			            .attr('class', 'feastLine')
+                        .on("mouseover", function (d) {
+                            tip.transition()
+                                .duration(100)
+                                .style("opacity", 1.0);
+                            tip.html('Pentecost, ' + pentecost(year).format("MMMM D"))
+                                .style("left", (d3.event.pageX) + 20 + "px")
+                                .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                        .on("mouseout", function (d) {
+                            tip.transition()
+                                .duration(800)
+                                .style("opacity", 0);
+                        });
+
+            var innerCircleBak = svg.append("circle")
+                        .attr("cx", 0)
+                        .attr("cy", 0)
+                        .attr("r", 43)
+                        .attr('fill', 'white')
+                        .attr('stroke', 'white')
+
+			var innerCircle = svg.append("circle")
+                    .attr("cx", 0)
+                    .attr("cy", 0)
+                    .attr("r", 40)                
+                    .attr('class', 'centercircle');
+			
+			function DaysFromAdvent(adate, yr) {   // adate is a javascript date object
+			    var b = moment(adventSunday(yr).toDate());
+			    var a = moment(adate);
+			    //b.setHours(0, 0, 0, 0); // get rid of time portion
+			    //a.setHours(0, 0, 0, 0); // get rid of time portion
+			    var diff = b.diff(a, 'days');			    
+			    return Math.floor(diff);
+			}
+
+			function DateToXY(adate, radius, year)
+			{
+			    var myDate = DaysFromAdvent(adate, year);
+
+			    var myDateDegrees = 0; // treating 0 degrees as straight up (Advent)
+
+			    if (myDate < 0)
+			        myDateDegrees = -1 * (360 - (365 - myDate) * 360 / 365);
+			    else
+			        myDateDegrees = (365 - myDate) * 360 / 365;
+
+			    var myDateRadians = myDateDegrees * Math.PI / 180;
+			    
+			    var myDatex = 0;
+			    var myDatey = 0;
+
+			    //alert(myDate + "days |" + myDateDegrees + "degrees | " + myDateRadians + " radians");
+			    if (myDateDegrees >= 0 && myDateDegrees < 90) {
+			        myDatex = radius * Math.sin(myDateRadians);
+			        myDatey = -1 * radius * Math.cos(myDateRadians);
+			    }
+			    else if (myDateDegrees >= 90 && myDateDegrees < 180) {
+			        myDatex = radius * Math.sin(myDateRadians);
+			        myDatey = -1 * radius * Math.cos(myDateRadians);
+			    }
+			    else if (myDateDegrees >= 180 && myDateDegrees < 270) {
+			        myDatex = radius * Math.sin(myDateRadians);
+			        myDatey = -1 * radius * Math.cos(myDateRadians);
+			    }
+			    else {
+			        myDatex = radius * Math.sin(myDateRadians);
+			        myDatey = -1 * radius * Math.cos(myDateRadians);
+			    }
+
+			    var myReturn = { x: myDatex, y: myDatey };
+			    return myReturn;
+
+			}
+
+
+	</script>
+</body>
+</html>

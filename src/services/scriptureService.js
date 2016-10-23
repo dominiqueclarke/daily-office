@@ -1,10 +1,9 @@
 angular.module('dailyOffice')
 .service('scriptureService', function($http, $sce) {
-  this.getDailyScripture = () => {
-    return $http.get('http://www.esvapi.org/v2/rest/readingPlanQuery?key=IP&reading-plan=bcp')
+  this.getDailyScripture = (date) => {
+    return $http.get(`http://www.esvapi.org/v2/rest/readingPlanQuery?key=IP&reading-plan=bcp&date=${date}&include-footnotes=0&include-footnote-links=0&include-short-copyright=0&include-copyright=1&include-audio-link=0`)
     .then(scripture => {
       console.log(scripture);
-      //console.log($sce.trustAsHtml(scripture.data));
       return scripture.data;
     });
   };
@@ -12,7 +11,7 @@ angular.module('dailyOffice')
     const yesterday = new Date().getTime() - 86400000;
     const yesterdayString = isoToQueryString(yesterday);
     console.log(yesterdayString);
-    return $http.get('http://www.esvapi.org/v2/rest/readingPlanQuery?key=IP&reading-plan=bcp&date=' + yesterdayString)
+    return $http.get('http://www.esvapi.org/v2/rest/readingPlanQuery?key=IP&reading-plan=bcp&include-footnotes=0&include-footnote-links=0&include-short-copyright=0&include-copyright=1&include-audio-link=0&date=' + yesterdayString)
     .then(scripture => {
       console.log('yesterday scripture', scripture.data)
       //console.log($sce.trustAsHtml(scripture.data));

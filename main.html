@@ -7,17 +7,24 @@
   <link rel="stylesheet" type="text/css" href="styles.css"></link>
   <title>Document</title>
 </head>
-<body ng-class="season" ng-controller="testCtrl">
+<body ng-class="seasonbg" ng-controller="testCtrl">
 
   <div class="container">
-    <h2 class="date">{{date}}</h2>
+    <calendar date="date"></calendar>
+    <h2 class="date">{{dateStr}}</h2>
     <div ng-bind-html="html"></div>
     <h2 class="season">{{season}}</h2>
   </div>
   <script src="./src/angular.js"></script>
+  <script type="text/javascript" src="d3.v3.min.js"></script>
+  <script type="text/javascript" src="moment.min.js"></script>
+  <script type="text/javascript" src="moment-range.min.js"></script>
+  <script type="text/javascript" src="advent.js"></script>
   <script src="./src/app.js"></script>
   <script src="./src/services/scriptureService.js"></script>
   <script src="./src/services/calendarService.js"></script>
   <script src="./src/controllers/testcontroller.js"></script>
+  <script src="./src/components/calendar.js"></script>
+
 </body>
 </html>

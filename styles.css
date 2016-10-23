@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Crimson+Text');
+@import url('http://static.esvmedia.org/legacy/css/text.css');
 
 * {
   box-sizing:border-box;
@@ -12,20 +13,10 @@ body {
   text-transform:capitalize;
 }
 
-.ephipany {
-
-
-background: #abbaab; /* fallback for old browsers */
-background: -webkit-linear-gradient(to left, #abbaab , #ffffff); /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to left, #abbaab , #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-}
-
 .lent {
 background: #B993D6; /* fallback for old browsers */
-background: -webkit-linear-gradient(to left, #B993D6 , #8CA6DB); /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to left, #B993D6 , #8CA6DB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+background: -webkit-linear-gradient(to top left, #B993D6 , #8CA6DB); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to top left, #B993D6 , #8CA6DB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .easter {
@@ -36,32 +27,44 @@ background: linear-gradient(to left, #abbaab , #ffffff); /* W3C, IE 10+/ Edge, F
 
 }
 
+.holyweek {
+  background: #870000; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top left, #870000 , #ffffff); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top left, #870000 , #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
 .pentecost {
   background-color:red;
 }
 
-.ordinary {
-
-
-
+.epiphany {
   background: #DAD299; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to left, #DAD299 , #B0DAB9); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to left, #DAD299 , #B0DAB9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(to top left, #DAD299 , #B0DAB9); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top left, #DAD299 , #B0DAB9); /* W */
+}
 
+.ordinarytime {
+  background: #DAD299; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top left, #DAD299 , #B0DAB9); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top left, #DAD299 , #B0DAB9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .advent {
-background: #B993D6; /* fallback for old browsers */
-background: -webkit-linear-gradient(to left, #B993D6 , #8CA6DB); /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to left, #B993D6 , #8CA6DB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: #B993D6; /* fallback for old top */
+background: -webkit-linear-gradient(to bottom left, #B993D6 , #8CA6DB); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to top left, #B993D6 , #8CA6DB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .christmas {
-  background-color:whitesmoke;
+
+background: #abbaab; /* fallback for old browsers */
+background: -webkit-linear-gradient(to top left, #abbaab , #ffffff); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to top left, #abbaab , #ffffff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 a {
-  color:#F73650;
+  color:darkblue;
 }
 .container {
   width:90%;
@@ -94,7 +97,136 @@ a {
 }
 
 .season {
+  font-size:1.5rem;
   position:absolute;
   top:0;
   right:0;
+}
+
+.todayPointer {
+    fill: white;
+    stroke: black;
+    stroke-width: 3px;
+}
+.seasonArc {
+fill: #999;
+stroke: #999;
+}
+
+.seasonArcAdvent {
+fill: #9F3CD4;
+}
+.seasonArcAdvent:hover {
+fill: #9F3CD4;
+}
+.seasonArcChristmas {
+fill: #ffffff;
+}
+.seasonArcChristmas:hover {
+fill: #ffffff;
+}
+.seasonArcEpiphany {
+fill: #28872A;
+}
+.seasonArcEpiphany:hover {
+fill: #28872A;
+}
+.seasonArcLent {
+fill: #9F3CD4;
+}
+.seasonArcLent:hover {
+fill: #9F3CD4;
+}
+.seasonArcHolyWeek {
+fill: #ff0000;
+}
+.seasonArcHolyWeek:hover {
+fill: #ff0000;
+}
+.seasonArcEaster {
+fill: #ffffff;
+}
+.seasonArcEaster:hover {
+fill: #ffffff;
+}
+.seasonArcOrdinary {
+fill: #28872A;
+}
+.seasonArcOrdinary:hover {
+fill: #28872A;
+}
+/* put this after other seasons */
+.notInSeason {
+fill: #999;
+stroke: #999;
+}
+.monthArc {
+fill: #F4F4F4;
+stroke: #AAAAAA;
+}
+
+.monthText {
+fill: #6B6B6B;
+font-size: 12px;
+font-family: 'Arial', 'Helvetica', sans-serif;
+}
+
+.seasonTextAlt {
+fill: #6B6B6B;
+font-size: 14px;
+font-family: 'Arial', 'Helvetica', sans-serif;
+}
+
+.seasonText {
+fill: black;
+font-size: 14px;
+font-family: 'Arial', 'Helvetica', sans-serif;
+}
+ /* put this after other seasons */
+ .notInSeasonText {
+fill: black;
+}
+
+.centercircle {
+    fill: white;
+    color: #bbb;
+    stroke: #bbb;
+}
+
+.feastLine {
+    stroke: #eee;
+    stroke-width: 5;
+}
+.feastLine:hover {
+    stroke: #aaa;
+    stroke-width: 5;
+}
+.feastText {
+fill: #6B6B6B;
+font-size: 10px;
+font-family: 'Arial', 'Helvetica', sans-serif;
+}
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    /* width: 100px; */
+    /* height: 28px; */
+    padding: 6px 10px 6px 10px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 2px solid #869fbe;
+    border-radius: 4px;
+    pointer-events: none;
+}
+div.tooltip-plain {
+    position: absolute;
+    text-align: center;
+    /* width: 100px; */
+    /* height: 28px; */
+    padding: 6px 10px 6px 10px;
+    font: 12px sans-serif;
+    color: #6B6B6B;
+    background: white;
+    border: none;
+    pointer-events: none;
 }
